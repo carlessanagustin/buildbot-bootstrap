@@ -27,32 +27,32 @@ from buildbot.changes.filter import ChangeFilter
 
 def schedulers_single(item):
 
-	singled = SingleBranchScheduler(  name='singled-'+item['name'],
-	                                change_filter = ChangeFilter(branch=item['name']),
-	                                builderNames=item['branch'],
+	singled = SingleBranchScheduler(  name='singled-'+item['branch'],
+	                                change_filter = ChangeFilter(branch=item['branch']),
+	                                builderNames=item['name'],
 	                                treeStableTimer=60,)
 	return (singled)
 
 def schedulers_force(item):
 
-	forcing = ForceScheduler(       name='forced-'+item['name'],
-	                                builderNames=item['branch'])
+	forcing = ForceScheduler(       name='forced-'+item['branch'],
+	                                builderNames=item['name'])
 	return (forcing)
 
 def schedulers_nightly(item):
 
-	two_hours = Nightly(    name='twohours-'+item['name'],
-	                        change_filter = ChangeFilter(branch=item['name']),
-	                        branch=item['name'],
-	                        builderNames=item['branch'],
+	two_hours = Nightly(    name='twohours-'+item['branch'],
+	                        change_filter = ChangeFilter(branch=item['branch']),
+	                        branch=item['branch'],
+	                        builderNames=item['name'],
 	                        hour=range(0, 24, 2),
 	                        )
 	return (two_hours)
 
 def schedulers_periodic(item):
 
-	daily = Periodic(       name='daily-'+item['name'],
-	                        builderNames=item['branch'],
+	daily = Periodic(       name='daily-'+item['branch'],
+	                        builderNames=item['name'],
 	                        periodicBuildTimer=24*60*60)
 	return (daily)
 

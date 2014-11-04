@@ -10,10 +10,9 @@
 from buildbot.buildslave import BuildSlave
 
 def get_slaves():
-	
 	slaves = []
 
-	slaves.append(BuildSlave('myslave', 'myslave-password'))
+	slaves.append(BuildSlave('example-slave', 'pass'))
 	
 	return slaves
 

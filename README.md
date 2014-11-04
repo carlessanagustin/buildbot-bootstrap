@@ -6,7 +6,8 @@ This is a simple way of bootstraping [Buildbot](http://buildbot.net/) first conf
 The structure of these configuration files allows to:
 
 * Pull from 1 Git repo (master.cfg > repo_url).
-* Add many branches to our builds (master.cfg > build_names.append...)
+* Add branches to our builds (master.cfg > build_names.append...)
+* Add selected schedulers to our builds (master.cfg > build_names.append...)
 * Use the same buildsteps for all branches (buildsteps.py > factory...).
 * Connected to 1 slave only (slaves.py > slaves.append...)
 

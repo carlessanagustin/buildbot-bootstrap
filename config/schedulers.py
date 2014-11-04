@@ -25,44 +25,68 @@ from buildbot.schedulers.timed import Periodic
 from buildbot.schedulers.timed import Nightly
 from buildbot.changes.filter import ChangeFilter
 
+def schedulers_single(item):
+
+	singled = SingleBranchScheduler(  name='singled-'+item['name'],
+	                                change_filter = ChangeFilter(branch=item['name']),
+	                                builderNames=item['branch'],
+	                                treeStableTimer=60,)
+	return (singled)
+
+def schedulers_force(item):
+
+	forcing = ForceScheduler(       name='forced-'+item['name'],
+	                                builderNames=item['branch'])
+	return (forcing)
+
+def schedulers_nightly(item):
+
+	two_hours = Nightly(    name='twohours-'+item['name'],
+	                        change_filter = ChangeFilter(branch=item['name']),
+	                        branch=item['name'],
+	                        builderNames=item['branch'],
+	                        hour=range(0, 24, 2),
+	                        )
+	return (two_hours)
+
+def schedulers_periodic(item):
+
+	daily = Periodic(       name='daily-'+item['name'],
+	                        builderNames=item['branch'],
+	                        periodicBuildTimer=24*60*60)
+	return (daily)
+
+
+
+
 def get_schedulers(build_names):
 
 	schedulers = []
 
+	temp = []
+	for build_name in build_names:
+		temp.extend(build_name['scheduler'])
+	sched_names = list(set(temp))
+
 	branches = list(set([item['branch'] for item in build_names]))
 
-	for branch in branches:
-		build_names_branch = [item['name'] for item in build_names if item['branch'] == branch]
-		schedulers_setup(schedulers, branch, build_names_branch)
-
-	return schedulers
-
-def schedulers_setup(schedulers, branch_name, build_names_branch):
-
-	singled = SingleBranchScheduler(  name='singled-'+branch_name,
-	                                change_filter = ChangeFilter(branch=branch_name),
-	                                builderNames=build_names_branch,
-	                                treeStableTimer=60,)
-
-	forcing = ForceScheduler(       name='forced-'+branch_name,
-	                                builderNames=build_names_branch)
-
-	two_hours = Nightly(    name='twohours-'+branch_name,
-	                        change_filter = ChangeFilter(branch=branch_name),
-	                        branch=branch_name,
-	                        builderNames=build_names_branch,
-	                        hour=range(0, 24, 2),
-	                        )
-
-	daily = Periodic(       name='daily-'+branch_name,
-	                        builderNames=build_names_branch,
-	                        periodicBuildTimer=24*60*60)
-
-	# comment/uncomment to disable/enable
-	schedulers.append(singled)
-	schedulers.append(forcing)
-	schedulers.append(two_hours)
-	schedulers.append(daily)
+	#scheduler_names = []
+	for sched_name in sched_names:
+		for branch in branches:
+			build_names_branch = [item['name'] for item in build_names if (item['branch'] == branch) and (item['scheduler'].count(sched_name) == 1)]
+			if not len(build_names_branch) == 0:
+				#scheduler_names.append(dict(scheduler=sched_name, name=build_names_branch, branch=branch))
+				temp =  dict(name=build_names_branch, branch=branch)
+				if sched_name == 'single':
+					schedulers.append(schedulers_single(temp))
+				elif sched_name == 'periodic':
+					schedulers.append(schedulers_periodic(temp))
+				elif sched_name == 'force':
+					schedulers.append(schedulers_force(temp))
+				elif sched_name == 'nightly':
+					schedulers.append(schedulers_nightly(temp))
+				else:
+					pass
 
 	return schedulers
 

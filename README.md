@@ -11,8 +11,21 @@ The structure of these configuration files allows to:
 * Use the same buildsteps for all branches (buildsteps.py > factory...).
 * Connected to 1 slave only (slaves.py > slaves.append...)
 
+## Customize:
+Open *master.cfg* file and change as you like...
+
+* title_name = 
+* title_url = 
+* web_url = 
+* web_users = 
+* working_dir = 
+* repo_url =
+
+#### Extra information
 
 Check out my YouTube [channel](http://www.youtube.com/playlist?list=PLF3EgRIVV_yRY_JCjSRfNFKAzt65Mng3P) for updated videos.
+
+***
 
 Parts of this code are forked from [Mark Lakewood github](https://github.com/mlakewood/Buildbot-rollout). I recommend you to check out his video:
 

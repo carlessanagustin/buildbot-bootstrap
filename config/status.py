@@ -3,10 +3,6 @@
 
 ####### STATUS TARGETS
 
-# 'status' is a list of Status Targets. The results of each build will be
-# pushed to these targets. buildbot/status/*.py has a variety to choose from,
-# including web pages, email senders, and IRC bots.
-
 from buildbot.status import html
 from buildbot.status.web import auth, authz
 
@@ -31,6 +27,9 @@ def get_status(users):
 	status.append(html.WebStatus(http_port=8010, authz=authz_cfg))
 
 	return status
+
+
+
 
 """
 ## from: https://github.com/mlakewood/Buildbot-rollout

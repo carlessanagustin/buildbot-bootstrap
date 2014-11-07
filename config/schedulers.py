@@ -3,22 +3,6 @@
 
 ####### SCHEDULERS
 
-# Configure the Schedulers, which decide how to react to incoming changes.  In this
-# case, just kick off a 'runtests' build
-
-#from buildbot.schedulers.timed import Periodic
-#c['schedulers'] = []
-#c['schedulers'].append(SingleBranchScheduler(
-#                            name="all",
-#                            branch='master',
-#                            treeStableTimer=None,
-#                            builderNames=["runtests"]))
-
-#print c
-
-#periodic = Periodic("every_6_hours", ['slave'], 6*60*60)
-#c['schedulers'] = [periodic]
-
 from buildbot.schedulers.basic import SingleBranchScheduler
 from buildbot.schedulers.forcesched import ForceScheduler
 from buildbot.schedulers.timed import Periodic
@@ -26,30 +10,35 @@ from buildbot.schedulers.timed import Nightly
 from buildbot.changes.filter import ChangeFilter
 
 def schedulers_single(item):
+	""" Check branch for commits"""
 
 	singled = SingleBranchScheduler(  name='singled-'+item['branch'],
 	                                change_filter = ChangeFilter(branch=item['branch']),
 	                                builderNames=item['name'],
-	                                treeStableTimer=60,)
+	                                treeStableTimer=30,)
 	return (singled)
 
 def schedulers_force(item):
+	""" Force build button at web project """
 
 	forcing = ForceScheduler(       name='forced-'+item['branch'],
 	                                builderNames=item['name'])
 	return (forcing)
 
 def schedulers_nightly(item):
+	""" Every day at 0:00 """
 
-	two_hours = Nightly(    name='twohours-'+item['branch'],
+	nightly = Nightly(    name='nightly-'+item['branch'],
 	                        change_filter = ChangeFilter(branch=item['branch']),
 	                        branch=item['branch'],
 	                        builderNames=item['name'],
-	                        hour=range(0, 24, 2),
+	                    	hour=0, minute=0,
+	                        # every 2 hours: hour=range(0, 24, 2),
 	                        )
-	return (two_hours)
+	return (nightly)
 
 def schedulers_periodic(item):
+	""" Every 24h after buildbot-master start """
 
 	daily = Periodic(       name='daily-'+item['branch'],
 	                        builderNames=item['name'],
@@ -57,9 +46,8 @@ def schedulers_periodic(item):
 	return (daily)
 
 
-
-
 def get_schedulers(build_names):
+	""" Creates schedulers for each branch and list of builds """
 
 	schedulers = []
 

@@ -1,17 +1,13 @@
 # -*- python -*-
 # ex: set syntax=python:
 
-# buildbot default configuration
-#from buildbot.steps.python import PyLint
-# check out the source
-#factory.addStep(Git(repourl='git://github.com/buildbot/pyflakes.git', mode='incremental'))
-# run the tests (note that this will require that 'trial' is installed)
-#factory.addStep(ShellCommand(command=["trial", "pyflakes"]))
+####### BUILD STEPS
 
+import time
 from buildbot.process.factory import BuildFactory
 from buildbot.steps.source.git import Git
 from buildbot.steps.shell import ShellCommand
-import time
+
 
 def get_buildsteps(branch_name, working_dir, repo_url):
 
@@ -19,7 +15,7 @@ def get_buildsteps(branch_name, working_dir, repo_url):
 
     # step 1
     factory.addStep(ShellCommand(   command=["pwd"],
-                                    name='Display working folder',
+                                    name='display_working_folder',
 				))
     # step 2
     factory.addStep(Git(    name="git_fetch",
